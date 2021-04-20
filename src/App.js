@@ -1,24 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Menu from "./components/Menu";
+import Categories from "./components/Categories";
+import items from "./components/data";
+import { useState } from "react";
 
 function App() {
+  const initialValue = items;
+  const [menuItems, setMenuItems] = useState(initialValue);
+
+  const categoriesSet = new Set(items.map((item) => item.category));
+  const categoriesList = ["all", ...categoriesSet];
+
+  const handleClick = (category) => {
+    if (category === "all") {
+      setMenuItems(initialValue);
+      return;
+    }
+
+    const newItems = items.filter((item) => item.category === category);
+    setMenuItems(newItems);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <main>
+        <div className="heading">
+          <h1>Menu Items</h1>
+        </div>
+        <Categories list={categoriesList} handleClick={handleClick} />
+        <div className="menu-container">
+          {menuItems.map((item) => (
+            <Menu key={item.id} item={item} />
+          ))}
+        </div>
+      </main>
+    </>
   );
 }
 
